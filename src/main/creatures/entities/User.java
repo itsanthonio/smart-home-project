@@ -4,9 +4,9 @@ import house.Room;
 import house.strategy.Strategy;
 import appliances.UsableObject;
 import appliances.devices.Fridge;
-import appliances.devices.StuffType;
 import appliances.state.BrokenState;
 import appliances.state.RestingState;
+import appliances.StuffType;
 
 import java.io.IOException;
 import java.util.Random;
@@ -66,13 +66,17 @@ public class User implements Entity {
 
     @Override
     public void findActivity() throws IOException {
-        strategy.findActivity(this);
+        if (strategy != null) {
+            strategy.findActivity(this);
+        } else {
+            waiting(); // Default behavior if no strategy is set
+        }
     }
 
     @Override
     public void useStuff(UsableObject usableObject) {
         if (usableObject != null) {
-            System.out.println(this.getName() + " says: I am using " + usableObject.getType());
+            System.out.println(this.getName() + " says: I am using " + usableObject.getName());
             moveTo(usableObject.getCurrentRoom());
 
             if (usableObject.getType() == StuffType.FRIDGE) {
@@ -87,6 +91,9 @@ public class User implements Entity {
             if (!chanceBrakeStuff(usableObject)) {
                 usingObject = usableObject;
                 usableObject.usingStuff();
+            } else {
+                usableObject.setState(new BrokenState(usableObject));
+                System.out.println(name + " broke the " + usableObject.getName() + "!");
             }
             return;
         }
@@ -131,7 +138,7 @@ public class User implements Entity {
     public void stopCurrentAction() {
         currentActionProgress = 1;
         if (getCurrentObject() != null) {
-            getCurrentObject().setState(new RestingState(usingObject));
+            getCurrentObject().setState(new RestingState(getCurrentObject()));
             usingObject = null;
         }
     }
@@ -153,5 +160,9 @@ public class User implements Entity {
 
     public void setStrategy(Strategy strategy) {
         this.strategy = strategy;
+    }
+    
+    public int getHungerLevel() {
+        return hungerLevel;
     }
 }
