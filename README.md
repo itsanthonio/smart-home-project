@@ -18,7 +18,7 @@ The family is active and spends free time roughly in proportion (50% using appli
 ## Design patterns
 
 - 	State machine
-    - package `stuff.state`
+    - package `stuff.state` 
 - 	Factory
     - `PeopleFactory`,  `RoomFactory`, `DeviceFactory`
 -   Observer
