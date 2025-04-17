@@ -1,8 +1,7 @@
 package creatures.entities;
 
+import appliances.UsableObject;
 import house.Room;
-import stuff.UsableObject;
-
 import java.io.IOException;
 
 /**
