@@ -1,13 +1,15 @@
-package main.creatures.factories;
+package creatures.factories;
 
-import main.creatures.entities.User;
-import main.house.Room;
+import creatures.entities.User;
+import house.Room;
+import house.strategy.Strategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Factory for creating users in the smart home.
+ * Implements the Singleton pattern.
  */
 public class UserFactory {
 
@@ -39,8 +41,9 @@ public class UserFactory {
      * @param room user's room
      * @return user
      */
-    public User create(String name, int age, Room room) {
+    public User create(String name, int age, Room room, Strategy defaultStrategy) {
         User user = new User(name, age, room);
+        user.setStrategy(defaultStrategy);
         users.add(user);
         return user;
     }
