@@ -4,10 +4,9 @@ import appliances.devices.*;
 import creatures.entities.User;
 import house.Room;
 import house.SmartHome;
-import system.Logger;
-
 import java.io.IOException;
 import java.util.Scanner;
+import system.Logger;
 
 /**
  * Main application class for the Smart Home system.

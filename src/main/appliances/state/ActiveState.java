@@ -6,10 +6,7 @@ import appliances.UsableObject;
  * Represents the active state of a device.
  */
 public class ActiveState implements DeviceState {
-    private final UsableObject device;
-    
-    public ActiveState(UsableObject device) {
-        this.device = device;
+    public ActiveState() {
     }
     
     @Override

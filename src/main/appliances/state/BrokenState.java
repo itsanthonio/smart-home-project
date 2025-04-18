@@ -5,15 +5,15 @@ import appliances.UsableObject;
 /**
  * Represents the broken state of a device.
  */
-public class BrokenState implements DeviceState {
-    private final UsableObject device;
-    
+public final class BrokenState implements DeviceState {
+   
+
     public BrokenState(UsableObject device) {
-        this.device = device;
-    }
-    
+        handle(device);
+    }    
     @Override
     public void handle(UsableObject device) {
+        device.setState(this);
         device.turnOff();
         device.addEventToReport(device.getName() + " is broken and needs repair");
     }
