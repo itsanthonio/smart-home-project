@@ -102,4 +102,6 @@ public class SmartHome {
     public Strategy getCurrentStrategy() {
         return currentStrategy;
     }
+
+    
 }

@@ -1,9 +1,10 @@
 package appliances.devices;
 
-import appliances.UsableObject;
 import appliances.StuffType;
+import appliances.UsableObject;
 import appliances.state.RestingState;
 import house.Room;
+
 
 /**
  * Represents a door in the smart home.

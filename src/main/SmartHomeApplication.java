@@ -37,13 +37,11 @@ public class SmartHomeApplication {
                     case 3:
                         changeHomeMode();
                         break;
+
                     case 4:
-                        simulateTimeStep();
-                        break;
-                    case 5:
                         viewLogs();
                         break;
-                    case 6:
+                    case 5:
                         running = false;
                         System.out.println("Exiting Smart Home Controller. Goodbye!");
                         break;
@@ -111,9 +109,8 @@ public class SmartHomeApplication {
         System.out.println("1. Control Device");
         System.out.println("2. Control Room");
         System.out.println("3. Change Home Mode");
-        System.out.println("4. Simulate Time Step");
-        System.out.println("5. View Logs");
-        System.out.println("6. Exit");
+        System.out.println("4. View Logs");
+        System.out.println("5. Exit");
         System.out.print("Enter your choice: ");
     }
     
@@ -382,32 +379,41 @@ public class SmartHomeApplication {
                 System.out.println("All alerts cleared");
             }
         } else if (device instanceof SmartVacuum) {
-            SmartVacuum vacuum = (SmartVacuum) device;
-            System.out.println("1. Start Cleaning");
-            System.out.println("2. Return to Dock");
-            System.out.println("3. Set Cleaning Mode");
-            System.out.println("4. Check Status");
-            System.out.print("Enter choice: ");
-            int choice = getMenuChoice();
-            
-            if (choice == 1) {
-                vacuum.startCleaning();
-                System.out.println("Started cleaning in " + vacuum.getCleaningMode() + " mode");
-            } else if (choice == 2) {
-                vacuum.returnToDock();
-                System.out.println("Returning to dock");
-            } else if (choice == 3) {
-                System.out.println("Available modes: Normal, Deep, Spot, Edge");
-                System.out.print("Enter mode: ");
-                String mode = scanner.nextLine();
-                vacuum.setCleaningMode(mode);
-                System.out.println("Cleaning mode set to: " + mode);
-            } else if (choice == 4) {
-                System.out.println("Battery Level: " + vacuum.getBatteryLevel() + "%");
-                System.out.println("Dust Bin Capacity: " + vacuum.getDustBinCapacity() + "%");
-                System.out.println("Status: " + (vacuum.isCharging() ? "Charging" : "Not Charging"));
-            }
-        } else {
+        SmartVacuum vacuum = (SmartVacuum) device;
+        System.out.println("1. Start Cleaning");
+        System.out.println("2. Stop Cleaning");
+        System.out.println("3. Go To Charging Station");
+        System.out.println("4. Set Mode");
+        System.out.println("5. Empty Dust Bin");
+        System.out.println("6. Check Status");
+        System.out.print("Enter choice: ");
+        int choice = getMenuChoice();
+        
+        if (choice == 1) {
+            vacuum.startCleaning();
+            System.out.println("Started cleaning in " + vacuum.getMode() + " mode");
+        } else if (choice == 2) {
+            vacuum.stopCleaning();
+            System.out.println("Stopped cleaning");
+        } else if (choice == 3) {
+            vacuum.goToChargingStation();
+            System.out.println("Returning to charging station");
+        } else if (choice == 4) {
+            System.out.println("Available modes: Auto, Spot, Edge");
+            System.out.print("Enter mode: ");
+            String mode = scanner.nextLine();
+            vacuum.setMode(mode);
+            System.out.println("Mode set to: " + mode);
+        } else if (choice == 5) {
+            vacuum.emptyDustBin();
+            System.out.println("Dust bin emptied");
+        } else if (choice == 6) {
+            System.out.println("Battery Level: " + vacuum.getBatteryLevel() + "%");
+            System.out.println("Dust Bin Level: " + vacuum.getDustBinLevel() + "%");
+            System.out.println("Current Mode: " + vacuum.getMode());
+            System.out.println("Target Room: " + vacuum.getTargetRoom().getName());
+        }
+    }else {
             System.out.println("No specific actions available for this device type.");
         }
     }
@@ -545,14 +551,7 @@ public class SmartHomeApplication {
         System.out.println("Home mode changed to: " + newMode);
     }
     
-    private static void simulateTimeStep() {
-        System.out.println("\n===== TIME SIMULATION =====");
-        System.out.println("Simulating time step...");
-        
-        smartHome.simulateTimeStep();
-        
-        System.out.println("Time step simulated. Check logs for details.");
-    }
+    
     
     private static void viewLogs() throws IOException {
         System.out.println("\n===== SYSTEM LOGS =====");

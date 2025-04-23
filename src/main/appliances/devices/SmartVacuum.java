@@ -117,4 +117,7 @@ public class SmartVacuum extends UsableObject {
     public Room getTargetRoom() {
         return targetRoom;
     }
+
+
+    
 }
