@@ -26,12 +26,14 @@ public class SmartHome {
     private UserFactory userFactory;
     
     private Strategy currentStrategy;
+    private String currentMode;
     
     private SmartHome() {
         this.logger = new Logger();
         this.deviceFactory = DeviceFactory.getInstance(logger);
         this.userFactory = UserFactory.getInstance();
         this.currentStrategy = new NormalModeStrategy();
+        this.currentMode = "normal";
     }
     
     public static SmartHome getInstance() {
@@ -104,4 +106,35 @@ public class SmartHome {
     }
 
     
+
+    public void setMode(String mode) {
+        this.currentMode = mode;
+        switch (mode.toLowerCase()) {
+            case "night":
+                activateNightMode();
+                break;
+            case "day":
+            case "normal":
+                activateNormalMode();
+                break;
+            case "vacation":
+                activateVacationMode();
+                break;
+            case "energysaving":
+                // Add energy saving strategy if needed
+                logger.log("Energy saving mode not implemented yet");
+                break;
+            case "away":
+                // Add away mode strategy if needed
+                logger.log("Away mode not implemented yet");
+                break;
+            default:
+                logger.log("Invalid mode: " + mode + ". Defaulting to normal mode.");
+                activateNormalMode();
+        }
+    }
+
+    public String getCurrentMode() {
+        return currentMode;
+    }
 }
