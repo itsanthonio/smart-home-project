@@ -58,41 +58,53 @@ public class SmartHomeApplication {
         scanner.close();
     }
     
-    private static void initializeSmartHome() {
-        Logger logger = smartHome.getLogger();
-        logger.log("Initializing Smart Home...");
-        
-        // Create rooms
-        Room livingRoom = new Room("Living Room");
-        Room kitchen = new Room("Kitchen");
-        Room bedroom = new Room("Bedroom");
-        Room bathroom = new Room("Bathroom");
-        
-        smartHome.addRoom(livingRoom);
-        smartHome.addRoom(kitchen);
-        smartHome.addRoom(bedroom);
-        smartHome.addRoom(bathroom);
-        
-        // Create devices using the factory
-        Light livingRoomLight = smartHome.getDeviceFactory().createLight("Living Room Light", livingRoom);
-        TV livingRoomTV = smartHome.getDeviceFactory().createTV("Living Room TV", livingRoom);
-        Door frontDoor = smartHome.getDeviceFactory().createDoor("Front Door", livingRoom);
-        
-        Fridge kitchenFridge = smartHome.getDeviceFactory().createFridge("Kitchen Fridge", kitchen);
-        Light kitchenLight = smartHome.getDeviceFactory().createLight("Kitchen Light", kitchen);
-        
-        Light bedroomLight = smartHome.getDeviceFactory().createLight("Bedroom Light", bedroom);
-        AC bedroomAC = smartHome.getDeviceFactory().createAC("Bedroom AC", bedroom);
-        
-        Light bathroomLight = smartHome.getDeviceFactory().createLight("Bathroom Light", bathroom);
-        
-        // Create users
-        User john = smartHome.getUserFactory().create("John", 35, livingRoom, smartHome.getCurrentStrategy());
-        User alice = smartHome.getUserFactory().create("Alice", 32, bedroom, smartHome.getCurrentStrategy());
-        
-        logger.log("Smart Home initialized with " + smartHome.getRooms().size() + " rooms and " + 
-                   smartHome.getUserFactory().getUsers().size() + " users");
-    }
+   private static void initializeSmartHome() {
+    Logger logger = smartHome.getLogger();
+    logger.log("Initializing Smart Home...");
+    
+    // Create rooms
+    Room livingRoom = new Room("Living Room");
+    Room kitchen = new Room("Kitchen");
+    Room bedroom = new Room("Bedroom");
+    Room bathroom = new Room("Bathroom");
+    Room office = new Room("Home Office");
+    Room garage = new Room("Garage");
+    
+    smartHome.addRoom(livingRoom);
+    smartHome.addRoom(kitchen);
+    smartHome.addRoom(bedroom);
+    smartHome.addRoom(bathroom);
+    smartHome.addRoom(office);
+    smartHome.addRoom(garage);
+    
+    // Create devices using the factory
+    Light livingRoomLight = smartHome.getDeviceFactory().createLight("Living Room Light", livingRoom);
+    TV livingRoomTV = smartHome.getDeviceFactory().createTV("Living Room TV", livingRoom);
+    Door frontDoor = smartHome.getDeviceFactory().createDoor("Front Door", livingRoom);
+    AudioSystem livingRoomAudio = smartHome.getDeviceFactory().createAudioSystem("Living Room Sound System", livingRoom);
+    
+    Fridge kitchenFridge = smartHome.getDeviceFactory().createFridge("Kitchen Fridge", kitchen);
+    Light kitchenLight = smartHome.getDeviceFactory().createLight("Kitchen Light", kitchen);
+    Thermostat kitchenThermostat = smartHome.getDeviceFactory().createThermostat("Kitchen Thermostat", kitchen);
+    
+    Light bedroomLight = smartHome.getDeviceFactory().createLight("Bedroom Light", bedroom);
+    AC bedroomAC = smartHome.getDeviceFactory().createAC("Bedroom AC", bedroom);
+    
+    Light bathroomLight = smartHome.getDeviceFactory().createLight("Bathroom Light", bathroom);
+    
+    Computer officeComputer = smartHome.getDeviceFactory().createComputer("Office Computer", office);
+    Light officeLight = smartHome.getDeviceFactory().createLight("Office Light", office);
+    
+    SmartVacuum vacuumBot = smartHome.getDeviceFactory().createSmartVacuum("Vacuum Bot", livingRoom);
+    SecuritySystem securitySystem = smartHome.getDeviceFactory().createSecuritySystem("Home Security", livingRoom);
+    
+    // Create users
+    User john = smartHome.getUserFactory().create("John", 35, livingRoom, smartHome.getCurrentStrategy());
+    User alice = smartHome.getUserFactory().create("Alice", 32, bedroom, smartHome.getCurrentStrategy());
+    
+    logger.log("Smart Home initialized with " + smartHome.getRooms().size() + " rooms and " + 
+              smartHome.getUserFactory().getUsers().size() + " users");
+}
     
     private static void displayMenu() {
         System.out.println("\n===== SMART HOME CONTROLLER =====");
@@ -242,87 +254,320 @@ public class SmartHomeApplication {
                 fridge.consumeFood();
                 System.out.println("Consumed 1 food item");
             }
+        } else if (device instanceof Thermostat) {
+            Thermostat thermostat = (Thermostat) device;
+            System.out.println("1. Set Target Temperature");
+            System.out.println("2. Set Mode");
+            System.out.println("3. Toggle Scheduling");
+            System.out.print("Enter choice: ");
+            int choice = getMenuChoice();
+            
+            if (choice == 1) {
+                System.out.print("Enter target temperature (15-30): ");
+                int temp = getMenuChoice();
+                thermostat.setTargetTemperature(temp);
+                System.out.println("Target temperature set to " + temp + "°C");
+            } else if (choice == 2) {
+                System.out.println("Available modes: Auto, Heat, Cool, Off");
+                System.out.print("Enter mode: ");
+                String mode = scanner.nextLine();
+                thermostat.setMode(mode);
+                System.out.println("Mode changed to " + mode);
+            } else if (choice == 3) {
+                if (thermostat.isSchedulingEnabled()) {
+                    thermostat.disableScheduling();
+                    System.out.println("Scheduling disabled");
+                } else {
+                    thermostat.enableScheduling();
+                    System.out.println("Scheduling enabled");
+                }
+            }
+        } else if (device instanceof AudioSystem) {
+            AudioSystem audioSystem = (AudioSystem) device;
+            System.out.println("1. Set Volume");
+            System.out.println("2. Set Mode");
+            System.out.println("3. Play Track");
+            System.out.println("4. Stop Playback");
+            System.out.print("Enter choice: ");
+            int choice = getMenuChoice();
+            
+            if (choice == 1) {
+                System.out.print("Enter volume level (0-100): ");
+                int volume = getMenuChoice();
+                audioSystem.setVolume(volume);
+                System.out.println("Volume set to " + volume);
+            } else if (choice == 2) {
+                System.out.println("Available modes: Stereo, Surround, Party");
+                System.out.print("Enter mode: ");
+                String mode = scanner.nextLine();
+                audioSystem.setMode(mode);
+                System.out.println("Mode changed to " + mode);
+            } else if (choice == 3) {
+                System.out.print("Enter track name: ");
+                String track = scanner.nextLine();
+                audioSystem.playTrack(track);
+                System.out.println("Now playing: " + track);
+            } else if (choice == 4) {
+                audioSystem.stopPlayback();
+                System.out.println("Playback stopped");
+            }
+        } else if (device instanceof Computer) {
+            Computer computer = (Computer) device;
+            System.out.println("1. Run Application");
+            System.out.println("2. Close Application");
+            System.out.println("3. Sleep/Wake");
+            System.out.println("4. Check System Status");
+            System.out.print("Enter choice: ");
+            int choice = getMenuChoice();
+            
+            if (choice == 1) {
+                System.out.print("Enter application name: ");
+                String app = scanner.nextLine();
+                computer.runApplication(app);
+                System.out.println("Running application: " + app);
+            } else if (choice == 2) {
+                computer.closeApplication();
+                System.out.println("Application closed");
+            } else if (choice == 3) {
+                if (computer.isInSleepMode()) {
+                    computer.exitSleepMode();
+                    System.out.println("Computer woken from sleep");
+                } else {
+                    computer.enterSleepMode();
+                    System.out.println("Computer entered sleep mode");
+                }
+            } else if (choice == 4) {
+                System.out.println("CPU Usage: " + computer.getCpuUsage() + "%");
+                System.out.println("Memory Usage: " + computer.getMemoryUsage() + "%");
+                System.out.println("Current Application: " + computer.getCurrentApplication());
+            }
+        } else if (device instanceof SecuritySystem) {
+            SecuritySystem security = (SecuritySystem) device;
+            System.out.println("1. Arm/Disarm");
+            System.out.println("2. Set Mode");
+            System.out.println("3. Simulate Motion Detection");
+            System.out.println("4. View Alerts");
+            System.out.println("5. Clear Alerts");
+            System.out.print("Enter choice: ");
+            int choice = getMenuChoice();
+            
+            if (choice == 1) {
+                if (security.isArmed()) {
+                    security.disarm();
+                    System.out.println("Security system disarmed");
+                } else {
+                    security.arm();
+                    System.out.println("Security system armed in " + security.getMode() + " mode");
+                }
+            } else if (choice == 2) {
+                System.out.println("Available modes: Home, Away, Night");
+                System.out.print("Enter mode: ");
+                String mode = scanner.nextLine();
+                security.setMode(mode);
+                System.out.println("Mode set to: " + mode);
+            } else if (choice == 3) {
+                security.detectMotion();
+                System.out.println("Motion detected!");
+            } else if (choice == 4) {
+                System.out.println("\n===== SECURITY ALERTS =====");
+                if (security.getAlerts().isEmpty()) {
+                    System.out.println("No alerts");
+                } else {
+                    for (String alert : security.getAlerts()) {
+                        System.out.println("- " + alert);
+                    }
+                }
+            } else if (choice == 5) {
+                security.clearAlerts();
+                System.out.println("All alerts cleared");
+            }
+        } else if (device instanceof SmartVacuum) {
+            SmartVacuum vacuum = (SmartVacuum) device;
+            System.out.println("1. Start Cleaning");
+            System.out.println("2. Return to Dock");
+            System.out.println("3. Set Cleaning Mode");
+            System.out.println("4. Check Status");
+            System.out.print("Enter choice: ");
+            int choice = getMenuChoice();
+            
+            if (choice == 1) {
+                vacuum.startCleaning();
+                System.out.println("Started cleaning in " + vacuum.getCleaningMode() + " mode");
+            } else if (choice == 2) {
+                vacuum.returnToDock();
+                System.out.println("Returning to dock");
+            } else if (choice == 3) {
+                System.out.println("Available modes: Normal, Deep, Spot, Edge");
+                System.out.print("Enter mode: ");
+                String mode = scanner.nextLine();
+                vacuum.setCleaningMode(mode);
+                System.out.println("Cleaning mode set to: " + mode);
+            } else if (choice == 4) {
+                System.out.println("Battery Level: " + vacuum.getBatteryLevel() + "%");
+                System.out.println("Dust Bin Capacity: " + vacuum.getDustBinCapacity() + "%");
+                System.out.println("Status: " + (vacuum.isCharging() ? "Charging" : "Not Charging"));
+            }
+        } else {
+            System.out.println("No specific actions available for this device type.");
         }
     }
     
-    private static void controlRoom() {
+    private static Room selectRoom() {
+        System.out.println("\n===== ROOMS =====");
+        var rooms = smartHome.getRooms();
+        for (int i = 0; i < rooms.size(); i++) {
+            System.out.println((i + 1) + ". " + rooms.get(i).getName());
+        }
+        
+        System.out.print("\nSelect room (0 to go back): ");
+        int roomChoice = getMenuChoice();
+        
+        if (roomChoice <= 0 || roomChoice > rooms.size()) {
+            return null;
+        }
+        
+        return rooms.get(roomChoice - 1);
+    }
+    
+    private static void controlRoom() throws IOException {
         System.out.println("\n===== ROOM CONTROL =====");
         
         Room selectedRoom = selectRoom();
         if (selectedRoom == null) return;
         
         System.out.println("\n===== CONTROLLING " + selectedRoom.getName() + " =====");
-        System.out.println("1. Turn On All Devices");
-        System.out.println("2. Turn Off All Devices");
+        System.out.println("1. Turn All Devices On");
+        System.out.println("2. Turn All Devices Off");
+        System.out.println("3. Set Room Temperature");
+        System.out.println("4. View Room Status");
         System.out.print("Enter choice: ");
         
         int choice = getMenuChoice();
         
         switch (choice) {
             case 1:
-                selectedRoom.turnOnAllDevices();
+                for (var device : selectedRoom.getDevices()) {
+                    device.turnOn();
+                }
                 System.out.println("All devices in " + selectedRoom.getName() + " turned ON");
                 break;
             case 2:
-                selectedRoom.turnOffAllDevices();
+                for (var device : selectedRoom.getDevices()) {
+                    device.turnOff();
+                }
                 System.out.println("All devices in " + selectedRoom.getName() + " turned OFF");
+                break;
+            case 3:
+                System.out.print("Enter temperature (15-30): ");
+                int temp = getMenuChoice();
+                // Find thermostat or AC in the room
+                boolean found = false;
+                for (var device : selectedRoom.getDevices()) {
+                    if (device instanceof Thermostat) {
+                        ((Thermostat) device).setTargetTemperature(temp);
+                        found = true;
+                        break;
+                    } else if (device instanceof AC) {
+                        ((AC) device).setTemperature(temp);
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    System.out.println("Temperature in " + selectedRoom.getName() + " set to " + temp + "°C");
+                } else {
+                    System.out.println("No temperature control device found in " + selectedRoom.getName());
+                }
+                break;
+            case 4:
+                System.out.println("\n===== " + selectedRoom.getName() + " STATUS =====");
+                System.out.println("Devices: " + selectedRoom.getDevices().size());
+                int onDevices = 0;
+                for (var device : selectedRoom.getDevices()) {
+                    if (device.isOn()) onDevices++;
+                }
+                System.out.println("Devices ON: " + onDevices);
+                System.out.println("Devices OFF: " + (selectedRoom.getDevices().size() - onDevices));
+                
+                // List users in the room
+                System.out.println("\nUsers in room:");
+                boolean usersFound = false;
+                for (User user : smartHome.getUserFactory().getUsers()) {
+                    if (user.getCurrentRoom() == selectedRoom) {
+                        System.out.println("- " + user.getName());
+                        usersFound = true;
+                    }
+                }
+                if (!usersFound) {
+                    System.out.println("No users currently in this room");
+                }
                 break;
             default:
                 System.out.println("Invalid choice");
         }
-    }
-    
-    private static Room selectRoom() {
-        System.out.println("\nAvailable Rooms:");
-        for (int i = 0; i < smartHome.getRooms().size(); i++) {
-            System.out.println((i + 1) + ". " + smartHome.getRooms().get(i).getName());
-        }
-        
-        System.out.print("\nSelect room (0 to go back): ");
-        int roomChoice = getMenuChoice();
-        
-        if (roomChoice <= 0 || roomChoice > smartHome.getRooms().size()) {
-            return null;
-        }
-        
-        return smartHome.getRooms().get(roomChoice - 1);
     }
     
     private static void changeHomeMode() {
-        System.out.println("\n===== CHANGE HOME MODE =====");
-        System.out.println("1. Normal Mode");
+        System.out.println("\n===== HOME MODE =====");
+        System.out.println("Current Mode: " + smartHome.getCurrentMode());
+        System.out.println("\n1. Day Mode");
         System.out.println("2. Night Mode");
-        System.out.println("3. Vacation Mode");
+        System.out.println("3. Away Mode");
+        System.out.println("4. Vacation Mode");
+        System.out.println("5. Energy Saving Mode");
         System.out.print("Enter choice: ");
         
         int choice = getMenuChoice();
+        String newMode = "";
         
         switch (choice) {
             case 1:
-                smartHome.activateNormalMode();
-                System.out.println("Normal Mode activated");
+                newMode = "Day";
                 break;
             case 2:
-                smartHome.activateNightMode();
-                System.out.println("Night Mode activated");
+                newMode = "Night";
                 break;
             case 3:
-                smartHome.activateVacationMode();
-                System.out.println("Vacation Mode activated");
+                newMode = "Away";
+                break;
+            case 4:
+                newMode = "Vacation";
+                break;
+            case 5:
+                newMode = "EnergySaving";
                 break;
             default:
                 System.out.println("Invalid choice");
+                return;
         }
+        
+        smartHome.setMode(newMode);
+        System.out.println("Home mode changed to: " + newMode);
     }
     
-    private static void simulateTimeStep() throws IOException {
-        System.out.println("\n===== SIMULATING TIME STEP =====");
+    private static void simulateTimeStep() {
+        System.out.println("\n===== TIME SIMULATION =====");
+        System.out.println("Simulating time step...");
+        
         smartHome.simulateTimeStep();
-        System.out.println("Time step simulated");
+        
+        System.out.println("Time step simulated. Check logs for details.");
     }
     
-    private static void viewLogs() {
+    private static void viewLogs() throws IOException {
         System.out.println("\n===== SYSTEM LOGS =====");
-        smartHome.getLogger().printAllLogs();
+        
+        var logs = smartHome.getLogger().getLogs();
+        
+        if (logs.isEmpty()) {
+            System.out.println("No logs available");
+        } else {
+            for (String log : logs) {
+                System.out.println(log);
+            }
+        }
+        
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
     }
 }

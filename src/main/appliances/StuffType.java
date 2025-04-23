@@ -11,5 +11,7 @@ public enum StuffType {
     DOOR,
     SECURITY_CAMERA,
     THERMOSTAT,
-    AUDIO_SYSTEM
+    AUDIO_SYSTEM,
+    COMPUTER,
+    SMART_VACUUM
 }
