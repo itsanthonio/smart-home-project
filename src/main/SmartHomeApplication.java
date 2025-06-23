@@ -129,7 +129,7 @@ public class SmartHomeApplication {
         Room selectedRoom = selectRoom();
         if (selectedRoom == null) return;
         
-        // Display devices in the room
+        // Show the devices in the room
         System.out.println("\nDevices in " + selectedRoom.getName() + ":");
         for (int i = 0; i < selectedRoom.getDevices().size(); i++) {
             System.out.println((i + 1) + ". " + selectedRoom.getDevices().get(i).getName() + 
@@ -143,7 +143,7 @@ public class SmartHomeApplication {
             return;
         }
         
-        // Get selected device
+        // Get the selected device
         var selectedDevice = selectedRoom.getDevices().get(deviceChoice - 1);
         
         // Device control menu
